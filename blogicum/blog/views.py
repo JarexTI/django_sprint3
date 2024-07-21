@@ -1,32 +1,35 @@
 from datetime import date
 from typing import Union
 
-from blog.models import Category, Post
 from django.db.models import QuerySet
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_list_or_404, get_object_or_404, render
+
+from blog.models import Category, Post
 
 
 def index(request: HttpRequest) -> HttpResponse:
     template: str = 'blog/index.html'
 
-    post_list: QuerySet = Post.objects.filter(
+    post_list: QuerySet[Post] = Post.objects.filter(
         pub_date__lte=date.today(),
         is_published=True,
         category__is_published=True
-    )[0:5]
+    )[:5]
 
-    context: dict[str, QuerySet] = {'post_list': post_list}
+    context: dict[str, QuerySet[Post]] = {'post_list': post_list}
     return render(request, template, context)
 
 
 def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
     template: str = 'blog/detail.html'
-    post: Post = get_object_or_404(Post, pk=pk)
-    if (post.pub_date.date() > date.today()
-            or not post.is_published
-            or not post.category.is_published):
-        raise Http404('Ошибка 404')
+    post: Post = get_object_or_404(
+        Post,
+        pk=pk,
+        pub_date__lte=date.today(),
+        is_published=True,
+        category__is_published=True
+    )
 
     context: dict[str, Post] = {'post': post}
     return render(request, template, context)
@@ -43,10 +46,9 @@ def category_posts(request: HttpRequest, category_slug: str) -> HttpResponse:
 
     category: Category = get_object_or_404(
         Category,
-        slug=category_slug
+        slug=category_slug,
+        is_published=True
     )
-    if not category.is_published:
-        raise Http404('Ошибка 404')
 
     context: dict[str, Union[list[Post], Category]] = {
         'post_list': post_list,
