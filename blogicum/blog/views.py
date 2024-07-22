@@ -1,13 +1,11 @@
 from datetime import date
 from typing import Union
 
+from blog.models import Category, Post
+from .const import LIMIT_POSTS
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_list_or_404, get_object_or_404, render
-
-from blog.models import Category, Post
-
-from const import LIMIT_POSTS
 
 
 def index(request: HttpRequest) -> HttpResponse:
