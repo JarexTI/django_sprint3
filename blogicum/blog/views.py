@@ -7,6 +7,8 @@ from django.shortcuts import get_list_or_404, get_object_or_404, render
 
 from blog.models import Category, Post
 
+from const import LIMIT_POSTS
+
 
 def index(request: HttpRequest) -> HttpResponse:
     template: str = 'blog/index.html'
@@ -15,7 +17,7 @@ def index(request: HttpRequest) -> HttpResponse:
         pub_date__lte=date.today(),
         is_published=True,
         category__is_published=True
-    )[:5]
+    )[:LIMIT_POSTS]
 
     context: dict[str, QuerySet[Post]] = {'post_list': post_list}
     return render(request, template, context)

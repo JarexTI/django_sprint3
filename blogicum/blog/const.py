@@ -1,0 +1,3 @@
+MAX_LENGTH: int = 256
+
+LIMIT_POSTS: int = 5

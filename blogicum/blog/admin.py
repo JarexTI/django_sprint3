@@ -30,7 +30,7 @@ class PostAdmin(admin.ModelAdmin):
 
 
 @admin.register(Category)
-class LocationAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         'title',
         'description',

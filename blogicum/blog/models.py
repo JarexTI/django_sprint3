@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-User = get_user_model()
+from const import MAX_LENGTH
 
-MAX_LENGTH: int = 256
+User = get_user_model()
 
 
 class PublishedAndCreatedAt(models.Model):
